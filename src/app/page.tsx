@@ -6,9 +6,9 @@ import { BIO, DJ_PHOTOS, SITE } from "@/lib/data";
 
 const HOME_PHOTOS = [
   {
-    photo: DJ_PHOTOS.find((p) => p.src === "/images/dj/mixer.jpg")!,
-    imageClass: "ml-0 mr-auto w-full max-w-4xl",
-    aspect: "aspect-[4/3] sm:aspect-[16/10]",
+    photo: DJ_PHOTOS.find((p) => p.src === "/images/dj/ggg.jpeg")!,
+    imageClass: "ml-0 mr-auto w-full max-w-3xl sm:ml-12 sm:w-[85%]",
+    aspect: "aspect-[5/4]",
   },
   {
     photo: DJ_PHOTOS.find((p) => p.src === "/images/dj/atlanta.png")!,
@@ -16,9 +16,9 @@ const HOME_PHOTOS = [
     aspect: "aspect-[3/4] sm:aspect-[4/5]",
   },
   {
-    photo: DJ_PHOTOS.find((p) => p.src === "/images/dj/ggg.jpeg")!,
-    imageClass: "ml-0 mr-auto w-full max-w-3xl sm:ml-12 sm:w-[85%]",
-    aspect: "aspect-[5/4]",
+    photo: DJ_PHOTOS.find((p) => p.src === "/images/dj/mixer.jpg")!,
+    imageClass: "ml-0 mr-auto w-full max-w-4xl",
+    aspect: "aspect-[4/3] sm:aspect-[16/10]",
   },
 ].filter((item) => item.photo.available);
 
@@ -67,7 +67,7 @@ export default function Home() {
                   fill
                   className="image-soft-scale object-cover"
                   sizes="(max-width: 640px) 92vw, 56rem"
-                  priority={photo.src === "/images/dj/mixer.jpg"}
+                  priority={photo.src === "/images/dj/ggg.jpeg"}
                 />
               </SoftMediaFrame>
             </div>
