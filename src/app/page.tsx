@@ -32,7 +32,7 @@ export default function Home() {
   return (
     <div className="mx-auto max-w-6xl px-6 py-16 sm:py-24">
       <header className="mb-12 max-w-2xl sm:mb-16">
-        <p className="animate-fade-up mb-4 text-xs uppercase tracking-[0.3em] text-[#d4af37]">
+        <p className="animate-fade-up mb-4 text-base font-medium uppercase tracking-[0.2em] text-[#d4af37] sm:text-lg">
           DJ &amp; Producer
         </p>
         <h1 className="animate-fade-up-delay-1 mb-8 text-5xl font-light tracking-wider text-white sm:text-7xl">

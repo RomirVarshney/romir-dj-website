@@ -17,7 +17,7 @@ export default function MixesPage() {
       </p>
 
       <section className="mb-16">
-        <h3 className="mb-6 text-xs uppercase tracking-[0.25em] text-[#d4af37]">
+        <h3 className="mb-6 text-base font-medium uppercase tracking-[0.2em] text-[#d4af37] sm:text-lg">
           Raas &amp; DDN Mixes
         </h3>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -28,7 +28,7 @@ export default function MixesPage() {
       </section>
 
       <section>
-        <h3 className="mb-6 text-xs uppercase tracking-[0.25em] text-[#d4af37]">
+        <h3 className="mb-6 text-base font-medium uppercase tracking-[0.2em] text-[#d4af37] sm:text-lg">
           Mixtape Segments
         </h3>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

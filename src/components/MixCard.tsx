@@ -1,19 +1,18 @@
 import Image from "next/image";
 import type { Mix } from "@/lib/data";
-import SoftMediaFrame from "@/components/SoftMediaFrame";
 
 function MixCardContent({ title, cover }: Pick<Mix, "title" | "cover">) {
   return (
     <>
-      <SoftMediaFrame aspect="aspect-square">
+      <div className="relative aspect-square w-full overflow-hidden">
         <Image
           src={cover}
           alt={title}
           fill
-          className="image-soft-scale object-cover transition-transform duration-500 group-hover:scale-105"
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
-      </SoftMediaFrame>
+      </div>
       <div className="p-4 pt-5">
         <h3 className="text-sm leading-snug text-zinc-200 transition-colors group-hover:text-[#d4af37]">
           {title}

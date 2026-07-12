@@ -55,7 +55,7 @@ export const RAAS_MIXES: Mix[] = [
   {
     title: "GT Ramblin' Raas 2023-2024 Mix",
     cover: "/images/covers/gr-2023-2024.jpg",
-    url: "#",
+    url: "https://soundcloud.com/romirvarshney/sets/gt-ramblin-raas-2023-2024-mix",
   },
   {
     title: "UVA HooRaas 2025-2026 Mix",
@@ -70,7 +70,7 @@ export const RAAS_MIXES: Mix[] = [
   {
     title: "UF Gatoraas 2022-2023 Mix",
     cover: "/images/covers/uf-gatoraas-2022-2023.jpg",
-    url: "#",
+    url: "https://soundcloud.com/romirvarshney/uf-gatoraas-2022-2023-mix",
   },
 ];
 
@@ -137,8 +137,8 @@ export const LIVE_GALLERY_PHOTOS = [
     aspect: "aspect-[3/4] sm:aspect-[4/5]",
   },
   {
-    src: "/images/dj/ft-lauderdale.png",
-    alt: "DJ ROMIR — Ft. Lauderdale, FL",
+    src: "/images/dj/img-0119.png",
+    alt: "DJ ROMIR behind the decks",
     aspect: "aspect-[3/4] sm:aspect-[4/5]",
   },
 ] as const;

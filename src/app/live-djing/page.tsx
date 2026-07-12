@@ -63,7 +63,7 @@ export default function LiveDJingPage() {
           <SectionHeading title="Live DJ Gigs" subtitle={LIVE_DJING_INTRO} />
 
           <section className="mb-10">
-            <h3 className="mb-5 text-xs uppercase tracking-[0.25em] text-[#d4af37]">
+            <h3 className="mb-5 text-base font-medium uppercase tracking-[0.2em] text-[#d4af37] sm:text-lg">
               After Parties (Raas, DDN, Bhangra)
             </h3>
             <ul className="flex flex-col gap-3">
@@ -79,7 +79,7 @@ export default function LiveDJingPage() {
           </section>
 
           <section>
-            <h3 className="mb-5 text-xs uppercase tracking-[0.25em] text-[#d4af37]">
+            <h3 className="mb-5 text-base font-medium uppercase tracking-[0.2em] text-[#d4af37] sm:text-lg">
               Other Locations
             </h3>
             <ul className="flex flex-col gap-3">
