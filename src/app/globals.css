@@ -129,3 +129,102 @@ body {
   mask-composite: intersect;
   opacity: 0.3;
 }
+
+.image-soft-frame-circle {
+  isolation: isolate;
+}
+
+.image-soft-edges-circle {
+  overflow: hidden;
+  -webkit-mask-image: radial-gradient(
+    circle at center,
+    #000 0%,
+    #000 72%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    circle at center,
+    #000 0%,
+    #000 72%,
+    transparent 100%
+  );
+}
+
+.image-soft-vignette-circle {
+  background: radial-gradient(
+    ellipse 92% 88% at 50% 50%,
+    transparent 58%,
+    rgba(10, 10, 10, 0.35) 86%,
+    var(--background) 100%
+  );
+}
+
+.image-soft-edge-blur-circle {
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  -webkit-mask-image: radial-gradient(
+    circle at center,
+    transparent 56%,
+    #000 84%,
+    #000 100%
+  );
+  mask-image: radial-gradient(
+    circle at center,
+    transparent 56%,
+    #000 84%,
+    #000 100%
+  );
+  opacity: 0.3;
+}
+
+.profile-photo {
+  isolation: isolate;
+}
+
+.profile-photo-image {
+  transform: scale(1.08);
+  object-position: center 96%;
+}
+
+.profile-photo-blur .profile-photo-image {
+  filter: blur(6px);
+}
+
+.profile-photo-blur {
+  -webkit-mask-image: radial-gradient(
+    circle at center,
+    transparent 54%,
+    #fff 76%,
+    #fff 100%
+  );
+  mask-image: radial-gradient(
+    circle at center,
+    transparent 54%,
+    #fff 76%,
+    #fff 100%
+  );
+}
+
+.profile-photo-sharp {
+  -webkit-mask-image: radial-gradient(
+    circle at center,
+    #fff 0%,
+    #fff 58%,
+    transparent 82%
+  );
+  mask-image: radial-gradient(
+    circle at center,
+    #fff 0%,
+    #fff 58%,
+    transparent 82%
+  );
+}
+
+.profile-photo-fade {
+  background: radial-gradient(
+    ellipse 92% 88% at 50% 50%,
+    transparent 58%,
+    rgba(10, 10, 10, 0.35) 86%,
+    var(--background) 100%
+  );
+}

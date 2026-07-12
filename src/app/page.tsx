@@ -1,5 +1,6 @@
 import Image from "next/image";
 import ButtonLink from "@/components/ButtonLink";
+import ProfilePhoto from "@/components/ProfilePhoto";
 import ScrollReveal from "@/components/ScrollReveal";
 import SoftMediaFrame from "@/components/SoftMediaFrame";
 import { BIO, DJ_PHOTOS, SITE } from "@/lib/data";
@@ -31,17 +32,23 @@ const NAV_LINKS = [
 export default function Home() {
   return (
     <div className="mx-auto max-w-6xl px-6 py-16 sm:py-24">
-      <header className="mb-12 max-w-2xl sm:mb-16">
-        <p className="animate-fade-up mb-4 text-base font-medium uppercase tracking-[0.2em] text-[#d4af37] sm:text-lg">
-          DJ &amp; Producer
-        </p>
-        <h1 className="animate-fade-up-delay-1 mb-8 text-5xl font-light tracking-wider text-white sm:text-7xl">
-          {SITE.name}
-        </h1>
-        <p className="animate-fade-up-delay-2 text-lg leading-relaxed text-zinc-400">
-          {BIO}
-        </p>
-      </header>
+      <div className="mb-12 flex flex-col items-center gap-10 sm:mb-16 lg:flex-row lg:items-center lg:justify-between lg:gap-14">
+        <header className="w-full max-w-2xl">
+          <p className="animate-fade-up mb-4 text-base font-medium uppercase tracking-[0.2em] text-[#d4af37] sm:text-lg">
+            DJ &amp; Producer
+          </p>
+          <h1 className="animate-fade-up-delay-1 mb-8 text-5xl font-light tracking-wider text-white sm:text-7xl">
+            {SITE.name}
+          </h1>
+          <p className="animate-fade-up-delay-2 text-lg leading-relaxed text-zinc-400">
+            {BIO}
+          </p>
+        </header>
+
+        <div className="animate-fade-up-delay-2 w-full max-w-[7.65rem] shrink-0 sm:max-w-[9.35rem] lg:max-w-none lg:w-[10.2rem] xl:w-[11.9rem]">
+          <ProfilePhoto className="mx-auto w-[7.65rem] sm:w-[9.35rem] lg:mx-0 lg:ml-auto lg:w-full" />
+        </div>
+      </div>
 
       <nav className="animate-fade-up-delay-3 mx-auto mb-16 flex w-full max-w-sm flex-col gap-3 sm:mb-20">
         {NAV_LINKS.map(({ href, label }, index) => (

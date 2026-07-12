@@ -5,8 +5,13 @@ export const SITE = {
   soundcloud: "https://soundcloud.com/romirvarshney",
 } as const;
 
+export const PROFILE_PHOTO = {
+  src: "/images/dj/profile.png",
+  alt: "DJ ROMIR performing live behind the decks",
+} as const;
+
 export const BIO =
-  "I am a DJ and producer that specializes in Desi, Hip-Hop, Pop, RnB, and other genres of music. As a former dancer for GT Ramblin' Raas (2024-2026), I've had a lot of experience working with Raas/DDN mixes, mixtapes, and competition APs throughout the nation!";
+  "I am a DJ and producer that specializes in Desi, Hip-Hop, Pop, RnB, and many other genres of music. As a former dancer for GT Ramblin' Raas (2024-2026), I've had a lot of experience working with Raas/DDN mixes, mixtapes, and competition APs throughout the nation!";
 
 export const LIVE_DJING_INTRO =
   "I've DJed at afterparties and competitions across the country, focusing on mixing Bollywood and English music together with a blend of cultural and mainstream sounds to make sure every set feels engaging from start to finish.";
