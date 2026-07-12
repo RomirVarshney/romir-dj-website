@@ -10,9 +10,9 @@ import {
 export default function MixesPage() {
   return (
     <div className="mx-auto max-w-6xl px-6 py-20">
-      <SectionHeading title="Mixes" subtitle={MIXES_INTRO} />
+      <SectionHeading title="Mixes" subtitle={MIXES_INTRO} centered />
 
-      <p className="mb-12 text-sm text-zinc-500">
+      <p className="mb-12 text-center text-sm text-zinc-500">
         DM {SITE.instagramHandle} for mix inquiries
       </p>
 

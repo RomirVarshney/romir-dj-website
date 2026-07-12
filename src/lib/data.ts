@@ -94,39 +94,51 @@ export const MIXTAPE_SEGMENTS: Mix[] = [
 
 export const DJ_PHOTOS = [
   {
-    src: "/images/dj/miami.jpg",
+    src: "/images/dj/miami.png",
     alt: "DJ ROMIR at Vice City Showdown — Miami, FL",
-    caption: "Vice City Showdown — Miami",
-    available: false,
+    available: true,
   },
   {
     src: "/images/dj/atlanta.png",
     alt: "DJ ROMIR at ATL Tamasha — Atlanta, GA",
-    caption: "ATL Tamasha — Atlanta",
     available: true,
   },
   {
     src: "/images/dj/ggg.jpeg",
     alt: "DJ ROMIR at Golden Gate Garba — San Francisco, CA",
-    caption: "Golden Gate Garba — San Francisco",
     available: true,
   },
   {
     src: "/images/dj/mixer.jpg",
     alt: "DJ ROMIR behind the decks",
-    caption: "Live set",
     available: true,
   },
   {
-    src: "/images/dj/ft-lauderdale.jpg",
+    src: "/images/dj/ft-lauderdale.png",
     alt: "DJ ROMIR — Ft. Lauderdale, FL",
-    caption: "Ft. Lauderdale",
-    available: false,
+    available: true,
   },
 ] as const;
 
-export const DJ_GIFS = [
-  "/images/gifs/IMG_0548.gif",
-  "/images/gifs/IMG_0721.gif",
-  "/images/gifs/IMG_9335.gif",
+export const DJ_BOOTH_CLIPS = [
+  "/images/gifs/IMG_0012.mp4",
+  "/images/gifs/IMG_0175.mp4",
+  "/images/gifs/IMG_0407.mp4",
+  "/images/gifs/IMG_0548.mp4",
+  "/images/gifs/IMG_0721.mp4",
+  "/images/gifs/IMG_7888.mp4",
+  "/images/gifs/IMG_9335.mp4",
+] as const;
+
+export const LIVE_GALLERY_PHOTOS = [
+  {
+    src: "/images/dj/miami.png",
+    alt: "DJ ROMIR at Vice City Showdown — Miami, FL",
+    aspect: "aspect-[3/4] sm:aspect-[4/5]",
+  },
+  {
+    src: "/images/dj/ft-lauderdale.png",
+    alt: "DJ ROMIR — Ft. Lauderdale, FL",
+    aspect: "aspect-[3/4] sm:aspect-[4/5]",
+  },
 ] as const;

@@ -1,99 +1,111 @@
 import Image from "next/image";
+import BoothClip from "@/components/BoothClip";
+import ScrollReveal from "@/components/ScrollReveal";
 import SectionHeading from "@/components/SectionHeading";
+import SoftMediaFrame from "@/components/SoftMediaFrame";
 import {
   AFTER_PARTIES,
-  DJ_GIFS,
-  DJ_PHOTOS,
+  DJ_BOOTH_CLIPS,
   LIVE_DJING_INTRO,
+  LIVE_GALLERY_PHOTOS,
   OTHER_LOCATIONS,
 } from "@/lib/data";
 
+const CLIPS_AFTER_FIRST_IMAGE = DJ_BOOTH_CLIPS.slice(0, 3);
+const CLIPS_AFTER_SECOND_IMAGE = DJ_BOOTH_CLIPS.slice(3);
+
+function GalleryPhoto({
+  photo,
+}: {
+  photo: (typeof LIVE_GALLERY_PHOTOS)[number];
+}) {
+  return (
+    <ScrollReveal>
+      <div className="group">
+        <SoftMediaFrame aspect={photo.aspect}>
+          <Image
+            src={photo.src}
+            alt={photo.alt}
+            fill
+            className="image-soft-scale object-cover transition-transform duration-500 group-hover:scale-105"
+            sizes="(max-width: 1024px) 100vw, 42vw"
+          />
+        </SoftMediaFrame>
+      </div>
+    </ScrollReveal>
+  );
+}
+
+function ClipGroup({ clips }: { clips: readonly string[] }) {
+  return (
+    <div className="grid grid-cols-3 gap-3 sm:gap-5">
+      {clips.map((clip) => (
+        <ScrollReveal key={clip}>
+          <SoftMediaFrame aspect="aspect-[3/4]">
+            <BoothClip
+              src={clip}
+              className="image-soft-scale h-full w-full object-cover"
+            />
+          </SoftMediaFrame>
+        </ScrollReveal>
+      ))}
+    </div>
+  );
+}
+
 export default function LiveDJingPage() {
-  const availablePhotos = DJ_PHOTOS.filter((p) => p.available);
+  const [firstPhoto, secondPhoto] = LIVE_GALLERY_PHOTOS;
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-20">
-      <SectionHeading title="Live DJ Gigs" subtitle={LIVE_DJING_INTRO} />
+      <div className="lg:flex lg:items-start lg:gap-14 xl:gap-16">
+        <aside className="mb-16 lg:sticky lg:top-24 lg:mb-0 lg:w-[38%] lg:shrink-0 xl:w-[36%]">
+          <SectionHeading title="Live DJ Gigs" subtitle={LIVE_DJING_INTRO} />
 
-      {/* Photo gallery */}
-      <div className="mb-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {availablePhotos.map((photo) => (
-          <div
-            key={photo.src}
-            className="group relative aspect-[4/3] overflow-hidden rounded-sm border border-white/10"
-          >
-            <Image
-              src={photo.src}
-              alt={photo.alt}
-              fill
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
-              sizes="(max-width: 640px) 100vw, 33vw"
-            />
-            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4">
-              <p className="text-xs uppercase tracking-widest text-[#d4af37]">
-                {photo.caption}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
+          <section className="mb-10">
+            <h3 className="mb-5 text-xs uppercase tracking-[0.25em] text-[#d4af37]">
+              After Parties (Raas, DDN, Bhangra)
+            </h3>
+            <ul className="flex flex-col gap-3">
+              {AFTER_PARTIES.map((event) => (
+                <li
+                  key={event}
+                  className="border-l-2 border-[#d4af37]/30 pl-4 text-sm text-zinc-300"
+                >
+                  {event}
+                </li>
+              ))}
+            </ul>
+          </section>
 
-      {/* GIFs */}
-      <div className="mb-16">
-        <h3 className="mb-6 text-xs uppercase tracking-[0.25em] text-[#d4af37]">
-          From the Booth
-        </h3>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {DJ_GIFS.map((gif) => (
-            <div
-              key={gif}
-              className="relative aspect-video overflow-hidden rounded-sm border border-white/10"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={gif}
-                alt="Live DJ performance"
-                className="h-full w-full object-cover"
-              />
-            </div>
-          ))}
+          <section>
+            <h3 className="mb-5 text-xs uppercase tracking-[0.25em] text-[#d4af37]">
+              Other Locations
+            </h3>
+            <ul className="flex flex-col gap-3">
+              {OTHER_LOCATIONS.map((location) => (
+                <li
+                  key={location}
+                  className="flex items-center gap-3 text-sm text-zinc-400"
+                >
+                  <span className="h-1 w-1 shrink-0 rounded-full bg-zinc-600" />
+                  {location}
+                </li>
+              ))}
+            </ul>
+          </section>
+        </aside>
+
+        <div className="flex min-w-0 flex-1 flex-col gap-10 sm:gap-14">
+          <GalleryPhoto photo={firstPhoto} />
+
+          <ClipGroup clips={CLIPS_AFTER_FIRST_IMAGE} />
+
+          <GalleryPhoto photo={secondPhoto} />
+
+          <ClipGroup clips={CLIPS_AFTER_SECOND_IMAGE} />
         </div>
       </div>
-
-      {/* After Parties */}
-      <section className="mb-12">
-        <h3 className="mb-6 text-xs uppercase tracking-[0.25em] text-[#d4af37]">
-          After Parties (Raas, DDN, Bhangra)
-        </h3>
-        <ul className="grid gap-3 sm:grid-cols-2">
-          {AFTER_PARTIES.map((event) => (
-            <li
-              key={event}
-              className="flex items-center gap-3 border-l-2 border-[#d4af37]/30 pl-4 text-sm text-zinc-300"
-            >
-              {event}
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {/* Other Locations */}
-      <section>
-        <h3 className="mb-6 text-xs uppercase tracking-[0.25em] text-[#d4af37]">
-          Other Locations
-        </h3>
-        <ul className="grid gap-3 sm:grid-cols-2">
-          {OTHER_LOCATIONS.map((location) => (
-            <li
-              key={location}
-              className="flex items-center gap-3 text-sm text-zinc-400"
-            >
-              <span className="h-1 w-1 shrink-0 rounded-full bg-zinc-600" />
-              {location}
-            </li>
-          ))}
-        </ul>
-      </section>
     </div>
   );
 }
