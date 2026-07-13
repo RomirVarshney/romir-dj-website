@@ -3,11 +3,19 @@ export const SITE = {
   instagram: "https://www.instagram.com/romirvarshney/",
   instagramHandle: "@romirvarshney",
   soundcloud: "https://soundcloud.com/romirvarshney",
+  phone: "904-955-6810",
+  phoneHref: "tel:+19049556810",
+  smsHref: "sms:+19049556810",
 } as const;
 
 export const PROFILE_PHOTO = {
   src: "/images/dj/profile.png",
   alt: "DJ ROMIR performing live behind the decks",
+} as const;
+
+export const CONTACT_PHOTO = {
+  src: "/images/dj/booth-contact.jpg",
+  alt: "DJ ROMIR behind the decks at a live gig",
 } as const;
 
 export const BIO =
