@@ -35,6 +35,10 @@ export const LIVE_DJING_INTRO = [
 export const MIXES_INTRO =
   "I've made a variety of mixes for the Raas/DDN Circuits, and have produced mashups that blend the best of Bollywood with Hip-Hop, R&B, House, Afro, etc.";
 
+export const GIG_NOTES = {
+  "Raas All-Stars — Baltimore, MD": "Nationals",
+} as const;
+
 export const AFTER_PARTIES = [
   "Raas All-Stars — Baltimore, MD",
   "Golden Gate Garba — San Francisco, CA",

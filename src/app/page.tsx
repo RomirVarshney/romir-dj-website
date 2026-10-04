@@ -12,6 +12,7 @@ import SoundDeck from "@/components/SoundDeck";
 import {
   AFTER_PARTIES,
   DJ_BOOTH_CLIPS,
+  GIG_NOTES,
   LIVE_DJING_INTRO,
   MIXES_INTRO,
   OTHER_LOCATIONS,
@@ -185,6 +186,7 @@ export default function Home() {
             const [name, place] = event.split(" — ");
             const image = GIG_IMAGES[event];
             const video = GIG_VIDEOS[event];
+            const note = GIG_NOTES[event as keyof typeof GIG_NOTES];
             return (
               <article
                 key={event}
@@ -225,6 +227,17 @@ export default function Home() {
                   >
                     {name}
                   </h3>
+                  {note ? (
+                    <p
+                      className="text-sm font-semibold uppercase tracking-[0.08em] text-zinc-400"
+                      style={{
+                        fontFamily:
+                          '"Helvetica Neue", Helvetica, Arial, sans-serif',
+                      }}
+                    >
+                      {note}
+                    </p>
+                  ) : null}
                 </div>
               </article>
             );

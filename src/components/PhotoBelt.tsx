@@ -4,6 +4,7 @@ const PHOTOS = [
   {
     src: "/images/dj/profile.png",
     alt: "DJ ROMIR performing live behind the decks",
+    position: "object-[center_80%]",
   },
   {
     src: "/images/dj/atlanta.png",
@@ -43,7 +44,7 @@ function Cards({ hidden = false }: { hidden?: boolean }) {
               alt={hidden || index >= PHOTOS.length ? "" : photo.alt}
               fill
               sizes="(max-width: 820px) 74vw, 400px"
-              className="object-cover"
+              className={`object-cover ${"position" in photo ? photo.position : ""}`}
             />
           </div>
         </figure>
