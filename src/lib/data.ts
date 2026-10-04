@@ -28,7 +28,7 @@ export const BIO = [
 ] as const;
 
 export const LIVE_DJING_INTRO = [
-  "I've DJed for over 4 years at afterparties, weddings, pregames, corporate events, and social mixers from coast to coast. Those nights are where I learned how to read a room, pace a set, and switch styles for whoever is actually there.",
+  "I've DJed for over 4 years at afterparties, weddings, pregames, corporate events, and social mixers from coast to coast. This is where I learned how to read a room, pace a set, and switch styles for whoever is actually there.",
   "I mix Bollywood and English throughout so that both sides stay in the set. Seamless transitions and quick song requests matter as much as the playlist, and I want every night to feel engaging from the first song to the last.",
 ] as const;
 
