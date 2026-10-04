@@ -2,9 +2,9 @@ import Image from "next/image";
 
 const PHOTOS = [
   {
-    src: "/images/dj/profile.png",
-    alt: "DJ ROMIR performing live behind the decks",
-    position: "object-[center_80%]",
+    src: "/images/dj/turnt-desi-cover.jpg",
+    alt: "DJ ROMIR behind the decks at Turnt Desi",
+    position: "object-[center_65%]",
   },
   {
     src: "/images/dj/atlanta.png",
