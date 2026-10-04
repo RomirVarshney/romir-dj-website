@@ -143,7 +143,7 @@ export default function Home() {
                   alt={PROFILE_PHOTO.alt}
                   fill
                   priority
-                  className="scale-[1.3] object-cover object-[center_40%]"
+                  className="scale-[1.5] object-cover object-[center_40%]"
                   sizes="(max-width: 1024px) 42vw, 28rem"
                 />
               </div>
