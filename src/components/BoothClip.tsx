@@ -14,15 +14,32 @@ export default function BoothClip({ src, className }: BoothClipProps) {
     const video = videoRef.current;
     if (!video) return;
 
+    video.muted = true;
+    video.defaultMuted = true;
+
+    const play = () => {
+      void video.play().catch(() => undefined);
+    };
+
+    const start = () => {
+      if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+        play();
+        return;
+      }
+
+      video.addEventListener("loadeddata", play, { once: true });
+      video.load();
+    };
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          void video.play().catch(() => undefined);
+          start();
         } else {
           video.pause();
         }
       },
-      { threshold: 0.15, rootMargin: "0px 0px -5% 0px" },
+      { threshold: 0.2 },
     );
 
     observer.observe(video);
@@ -32,14 +49,12 @@ export default function BoothClip({ src, className }: BoothClipProps) {
   return (
     <video
       ref={videoRef}
+      src={src}
       loop
       muted
       playsInline
-      autoPlay
-      preload="auto"
+      preload="none"
       className={className}
-    >
-      <source src={src} type="video/mp4" />
-    </video>
+    />
   );
 }

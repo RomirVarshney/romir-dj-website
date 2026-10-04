@@ -16,20 +16,22 @@ export default function ButtonLink({
   className = "",
 }: ButtonLinkProps) {
   const base =
-    "inline-flex items-center justify-center rounded-sm px-6 py-3 text-sm font-medium uppercase tracking-widest transition-all duration-200";
+    "inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-semibold uppercase tracking-widest transition-colors duration-200";
   const styles =
     variant === "primary"
-      ? "bg-[#d4af37] text-black hover:bg-[#e8c547]"
-      : "border border-[#d4af37]/50 text-[#d4af37] hover:border-[#d4af37] hover:bg-[#d4af37]/10";
+      ? "bg-[#0066ff] text-white hover:bg-[#3385ff]"
+      : "border border-white/20 text-white hover:border-white/50";
 
   const classes = `${base} ${styles} ${className}`.trim();
+  const isHash = href.startsWith("#");
 
-  if (external) {
+  if (external || isHash) {
     return (
       <a
         href={href}
-        target="_blank"
-        rel="noopener noreferrer"
+        {...(external
+          ? { target: "_blank", rel: "noopener noreferrer" }
+          : {})}
         className={classes}
       >
         {children}

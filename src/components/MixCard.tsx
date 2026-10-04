@@ -14,7 +14,7 @@ function MixCardContent({ title, cover }: Pick<Mix, "title" | "cover">) {
         />
       </div>
       <div className="p-4 pt-5">
-        <h3 className="text-sm leading-snug text-zinc-200 transition-colors group-hover:text-[#d4af37]">
+        <h3 className="text-sm leading-snug text-zinc-200 transition-colors group-hover:text-[#0066ff]">
           {title}
         </h3>
       </div>

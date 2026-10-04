@@ -3,7 +3,7 @@
 :root {
   --background: #0a0a0a;
   --foreground: #ededed;
-  --gold: #d4af37;
+  --gold: #0066ff;
 }
 
 @theme inline {
@@ -25,7 +25,7 @@ body {
 }
 
 ::selection {
-  background: rgba(212, 175, 55, 0.3);
+  background: rgba(0, 102, 255, 0.35);
   color: #fff;
 }
 
@@ -227,4 +227,64 @@ body {
     rgba(10, 10, 10, 0.35) 86%,
     var(--background) 100%
   );
+}
+
+.location-belt {
+  overflow: hidden;
+  padding: 22px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.07),
+    rgba(255, 255, 255, 0.02) 40%,
+    rgba(255, 255, 255, 0.06)
+  );
+  box-shadow: rgba(255, 255, 255, 0.12) 0 1px 0 inset;
+  backdrop-filter: blur(18px) saturate(160%);
+}
+
+.location-belt__track {
+  display: flex;
+  width: max-content;
+  animation: location-marquee 38s linear infinite;
+}
+
+.location-belt:hover .location-belt__track {
+  animation-play-state: paused;
+}
+
+.location-belt__group {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  padding-right: 30px;
+  white-space: nowrap;
+}
+
+.location-belt__name {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14.5px;
+  font-style: italic;
+  line-height: 23.2px;
+  color: rgb(185, 183, 178);
+}
+
+.location-belt__dot {
+  width: 9px;
+  height: 9px;
+  flex: 0 0 auto;
+  background: #0066ff;
+}
+
+@keyframes location-marquee {
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .location-belt__track {
+    animation: none;
+  }
 }

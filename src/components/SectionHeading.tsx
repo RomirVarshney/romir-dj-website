@@ -15,7 +15,7 @@ export default function SectionHeading({
         {title}
       </h2>
       <div
-        className={`mt-3 h-px w-12 bg-[#d4af37] ${centered ? "mx-auto" : ""}`}
+        className={`mt-3 h-px w-12 bg-[#0066ff] ${centered ? "mx-auto" : ""}`}
       />
       {subtitle && (
         <p

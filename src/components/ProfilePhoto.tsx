@@ -17,7 +17,7 @@ export default function ProfilePhoto({ className = "" }: ProfilePhotoProps) {
           aria-hidden
           fill
           className={imageClass}
-          sizes="(max-width: 1024px) 150px, 190px"
+          sizes="(max-width: 768px) 256px, 288px"
           priority
         />
       </div>
@@ -27,7 +27,7 @@ export default function ProfilePhoto({ className = "" }: ProfilePhotoProps) {
           alt={PROFILE_PHOTO.alt}
           fill
           className={imageClass}
-          sizes="(max-width: 1024px) 150px, 190px"
+          sizes="(max-width: 768px) 256px, 288px"
           priority
         />
       </div>

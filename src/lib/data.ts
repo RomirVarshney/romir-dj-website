@@ -9,8 +9,8 @@ export const SITE = {
 } as const;
 
 export const PROFILE_PHOTO = {
-  src: "/images/dj/profile.png",
-  alt: "DJ ROMIR performing live behind the decks",
+  src: "/images/dj/miami.png",
+  alt: "DJ ROMIR at Vice City Showdown — Miami, FL",
 } as const;
 
 export const CONTACT_PHOTO = {
@@ -28,14 +28,13 @@ export const MIXES_INTRO =
   "I've made a variety of mixes and mixtape mashups throughout Raas and DDN Circuits";
 
 export const AFTER_PARTIES = [
+  "Raas All-Stars — Baltimore, MD",
+  "Golden Gate Garba — San Francisco, CA",
+  "Vice City Showdown — Miami, FL",
   "Raas Rampage — Orlando, FL",
   "Raas Chaos — Washington, DC",
-  "DTX Dandiya — Dallas, TX",
-  "Golden Gate Garba — San Francisco, CA",
-  "Raas All-Stars — Baltimore, MD",
   "ATL Tamasha — Atlanta, GA",
   "Aaja Nachle — Dallas, TX",
-  "Vice City Showdown — Miami, FL",
 ] as const;
 
 export const OTHER_LOCATIONS = [
@@ -46,6 +45,13 @@ export const OTHER_LOCATIONS = [
   "Athens, GA",
   "Columbus, OH",
   "New York, NY",
+  "Bloomington, IN",
+  "Urbana-Champaign, IL",
+  "Charlotte, NC",
+  "College Station, TX",
+  "Columbia, SC",
+  "Los Angeles, CA",
+  "Raleigh, NC",
 ] as const;
 
 export type Mix = {
