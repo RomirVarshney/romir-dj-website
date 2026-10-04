@@ -35,7 +35,7 @@ const GIG_VIDEOS: Record<string, string> = {
   "Raas All-Stars — Baltimore, MD": "/videos/raas-all-stars-video.mp4",
   "ATL Tamasha — Atlanta, GA": "/videos/atl-holi-show-video.mp4",
   "Aaja Nachle — Dallas, TX": "/videos/ft-laudy-vid.mp4",
-  "Vice City Showdown — Miami, FL": "/videos/vice-city-showdown-video.mp4?v=2",
+  "Vice City Showdown — Miami, FL": "/videos/vice-city-showdown-video.mp4?v=3",
 };
 
 function SectionIndex({
@@ -106,7 +106,7 @@ export default function Home() {
         />
         <div className="relative mx-auto max-w-6xl px-6">
         <h1 className="flex justify-center">
-          <Logo className="h-auto w-full max-w-xs" priority />
+          <Logo className="h-auto w-full max-w-xs" sizes="320px" priority />
         </h1>
 
         <div className="mt-10 grid grid-cols-[3fr_2fr] items-start gap-3 sm:mt-12 sm:gap-8 lg:mt-16 lg:gap-16">

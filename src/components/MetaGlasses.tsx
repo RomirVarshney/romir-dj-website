@@ -56,7 +56,7 @@ function SetCard({
           ref={videoRef}
           src={src}
           playsInline
-          preload="metadata"
+          preload="none"
           controls={playing}
           className={`h-full w-full object-cover ${playing ? "" : "invisible"}`}
           onPlay={() => setPlaying(true)}

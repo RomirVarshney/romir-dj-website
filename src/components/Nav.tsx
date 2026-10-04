@@ -38,7 +38,7 @@ export default function Nav() {
     <header className="pointer-events-none fixed inset-x-0 top-4 z-50 flex justify-center px-3">
       <nav className="pointer-events-auto grid w-full max-w-3xl grid-cols-[1fr_auto_1fr] items-center rounded-full border border-white/10 bg-[#141414]/85 px-2.5 py-2 shadow-none backdrop-blur-md sm:px-3">
         <a href="#about" className="justify-self-start" aria-label="DJ ROMIR">
-          <Logo className="h-8 w-auto sm:h-9" priority alt="" />
+          <Logo className="h-8 w-auto sm:h-9" sizes="80px" alt="" />
         </a>
         <ul className="flex items-center justify-center gap-2.5 sm:gap-6">
           {links.map(({ href, id, label }) => (

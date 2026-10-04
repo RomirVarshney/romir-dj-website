@@ -170,9 +170,12 @@ function SkipIcon({ direction }: { direction: "back" | "forward" }) {
 }
 
 function DarkPlayer({ mix }: { mix: SoundPlayer }) {
+  const articleRef = useRef<HTMLElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const widgetRef = useRef<ScWidget | null>(null);
   const readyRef = useRef(false);
+  const startRef = useRef<(() => void) | null>(null);
+  const wantsPlayRef = useRef(false);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [sounds, setSounds] = useState<ScSound[]>([]);
@@ -183,93 +186,129 @@ function DarkPlayer({ mix }: { mix: SoundPlayer }) {
 
   useEffect(() => {
     const iframe = iframeRef.current;
-    if (!iframe) return;
+    const article = articleRef.current;
+    if (!iframe || !article) return;
     let cancelled = false;
     let refreshTimer = 0;
     let laterTimer = 0;
+    let started = false;
 
-    loadSoundCloudApi()
-      .then(() => {
-        if (cancelled || !window.SC || !iframeRef.current) return;
-        const widget = window.SC.Widget(iframeRef.current);
-        widgetRef.current = widget;
-        widget.bind("ready", () => {
-          readyRef.current = true;
-          widgets.set(mix.url, widget);
+    const start = () => {
+      if (started || cancelled) return;
+      started = true;
+      if (iframeRef.current && !iframeRef.current.getAttribute("src")) {
+        iframeRef.current.src = soundCloudPlayerSrc(mix.url);
+      }
 
-          const readPlays = () => {
-            if (tall) return;
-            widget.getCurrentSound((sound) => {
-              if (cancelled || !sound || !Number.isFinite(sound.playback_count)) return;
-              setPlays(sound.playback_count ?? null);
-            });
-          };
+      loadSoundCloudApi()
+        .then(() => {
+          if (cancelled || !window.SC || !iframeRef.current) return;
+          const widget = window.SC.Widget(iframeRef.current);
+          widgetRef.current = widget;
+          widget.bind("ready", () => {
+            readyRef.current = true;
+            widgets.set(mix.url, widget);
 
-          const readSounds = () => {
-            if (!tall) return;
-            widget.getSounds((nextSounds) => {
+            const readPlays = () => {
+              if (tall) return;
+              widget.getCurrentSound((sound) => {
+                if (cancelled || !sound || !Number.isFinite(sound.playback_count)) return;
+                setPlays(sound.playback_count ?? null);
+              });
+            };
+
+            const readSounds = () => {
+              if (!tall) return;
+              widget.getSounds((nextSounds) => {
+                if (cancelled) return;
+                const tracks = (nextSounds ?? [])
+                  .filter(
+                    (sound) =>
+                      Boolean(sound?.title) &&
+                      Number.isFinite(sound.duration) &&
+                      sound.duration > 0,
+                  )
+                  .map((sound) => ({
+                    title: sound.title,
+                    duration: sound.duration,
+                    playback_count: sound.playback_count,
+                    user: { username: sound.user?.username },
+                  }));
+                setSounds((current) => (tracks.length >= current.length ? tracks : current));
+              });
+            };
+
+            readPlays();
+            readSounds();
+            refreshTimer = window.setTimeout(() => {
+              readPlays();
+              readSounds();
+            }, 800);
+            laterTimer = window.setTimeout(() => {
               if (cancelled) return;
-              const tracks = (nextSounds ?? [])
-                .filter(
-                  (sound) =>
-                    Boolean(sound?.title) &&
-                    Number.isFinite(sound.duration) &&
-                    sound.duration > 0,
-                )
-                .map((sound) => ({
-                  title: sound.title,
-                  duration: sound.duration,
-                  playback_count: sound.playback_count,
-                  user: { username: sound.user?.username },
-                }));
-              setSounds((current) => (tracks.length >= current.length ? tracks : current));
-            });
-          };
+              readPlays();
+              readSounds();
+            }, 1800);
 
-          readPlays();
-          readSounds();
-          refreshTimer = window.setTimeout(() => {
-            readPlays();
-            readSounds();
-          }, 800);
-          laterTimer = window.setTimeout(() => {
-            if (cancelled) return;
-            readPlays();
-            readSounds();
-          }, 1800);
-        });
-        widget.bind("play", () => {
-          setPlaying(true);
-          pauseOthers(mix.url);
-          widget.getCurrentSoundIndex((index) => {
-            if (!cancelled) setTrackIndex(index);
+            if (wantsPlayRef.current) {
+              wantsPlayRef.current = false;
+              pauseOthers(mix.url);
+              widget.play();
+            }
           });
+          widget.bind("play", () => {
+            setPlaying(true);
+            pauseOthers(mix.url);
+            widget.getCurrentSoundIndex((index) => {
+              if (!cancelled) setTrackIndex(index);
+            });
+          });
+          widget.bind("pause", () => setPlaying(false));
+          widget.bind("finish", () => {
+            setPlaying(false);
+            setProgress(0);
+          });
+          widget.bind("playProgress", (event) => {
+            if (event) setProgress(event.relativePosition);
+          });
+        })
+        .catch(() => {
+          readyRef.current = false;
+          if (wantsPlayRef.current) {
+            wantsPlayRef.current = false;
+            window.open(mix.url, "_blank", "noopener,noreferrer");
+          }
         });
-        widget.bind("pause", () => setPlaying(false));
-        widget.bind("finish", () => {
-          setPlaying(false);
-          setProgress(0);
-        });
-        widget.bind("playProgress", (event) => {
-          if (event) setProgress(event.relativePosition);
-        });
-      })
-      .catch(() => {
-        readyRef.current = false;
-      });
+    };
+
+    startRef.current = start;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) start();
+      },
+      { rootMargin: "800px 0px", threshold: 0 },
+    );
+    observer.observe(article);
 
     return () => {
       cancelled = true;
+      startRef.current = null;
+      wantsPlayRef.current = false;
+      observer.disconnect();
       window.clearTimeout(refreshTimer);
       window.clearTimeout(laterTimer);
       widgets.delete(mix.url);
+      widgetRef.current = null;
+      readyRef.current = false;
     };
   }, [mix.url, tall]);
 
   function toggle() {
     const widget = widgetRef.current;
     if (!widget || !readyRef.current) {
-      window.open(mix.url, "_blank", "noopener,noreferrer");
+      wantsPlayRef.current = true;
+      startRef.current?.();
       return;
     }
     if (playing) {
@@ -327,6 +366,7 @@ function DarkPlayer({ mix }: { mix: SoundPlayer }) {
 
   return (
     <article
+      ref={articleRef}
       className={`relative overflow-hidden rounded-2xl border bg-[#121212] transition duration-300 hover:-translate-y-[3px] hover:border-white/20 ${
         mix.wide ? "min-[720px]:col-span-2" : ""
       } ${playing ? "border-white/25" : "border-white/10"}`}
@@ -334,7 +374,6 @@ function DarkPlayer({ mix }: { mix: SoundPlayer }) {
       <iframe
         ref={iframeRef}
         title={mix.title}
-        src={soundCloudPlayerSrc(mix.url)}
         allow="autoplay"
         loading="lazy"
         tabIndex={-1}
