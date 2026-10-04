@@ -19,14 +19,21 @@ export const CONTACT_PHOTO = {
   alt: "DJ ROMIR behind the decks at a live gig",
 } as const;
 
-export const BIO =
-  "I am a DJ and producer that specializes in Desi, Hip-Hop, Pop, RnB, and many other genres of music. As a former dancer for GT Ramblin' Raas (2024-2026), I've had a lot of experience working with Raas/DDN mixes, mixtapes, and competition APs throughout the nation!";
+export const BIO = [
+  "Hi there, my name is Romir Varshney, and I am a DJ and producer who specializes in Desi, Hip-Hop, Pop, RnB, and many other genres of music. I've spent years producing mixes, mixtapes, and running the aux at major events and celebrations from coast to coast!",
+  "I've been a music lover my entire life, but I first started getting into music curation and creation in my freshman year of high school, when I finally decided to try my hand at experimenting with music. And from my first time looking at the various knobs and buttons of FL Studio, to spending countless nights on YouTube learning music theory and mixing tutorials, and eventually creating my first beats, mashups, and later on, mixes, I've really refined my understanding of the entire creative process that goes into the music that we listen to and enjoy every day.",
+  "As I entered college and joined a dance team (GT Ramblin' Raas '24-'26), that's when I really got to experience the world of mixing and live DJing. Attending all of these competitions and hearing the music (sometimes my own!) from these massive speakers and subwoofers was something that really motivated me to pursue DJing seriously, transitioning from a dancer to someone driving the music behind it. I've now DJed for over 4 years, constantly refining my craft and perfecting different transitions and styles of DJing to match any genre, room, or crowd.",
+  "I've been fortunate enough to DJ for a diverse portfolio of events, from afterparties to weddings, pregames, corporate events, social mixers, and many more that have allowed me to understand how to best read a room, pace a night, and play music that everyone will enjoy. I pride myself on making seamless transitions, being able to judge the room, and taking song requests and switching music very quickly throughout the night. Beyond the music, I also prioritize being communicative, organized, and stress-free to work with from initial planning all the way through the actual event itself.",
+  "Come see my portfolio!",
+] as const;
 
-export const LIVE_DJING_INTRO =
-  "I've DJed at afterparties and competitions across the country, focusing on mixing Bollywood and English music together with a blend of cultural and mainstream sounds to make sure every set feels engaging from start to finish.";
+export const LIVE_DJING_INTRO = [
+  "I've DJed for over 4 years at afterparties, weddings, pregames, corporate events, and social mixers from coast to coast. Those nights are where I learned how to read a room, pace a set, and switch styles for whoever is actually there.",
+  "I mix Bollywood and English throughout so that both sides stay in the set. Seamless transitions and quick song requests matter as much as the playlist, and I want every night to feel engaging from the first song to the last.",
+] as const;
 
 export const MIXES_INTRO =
-  "I've made a variety of mixes and mixtape mashups throughout Raas and DDN Circuits";
+  "I've made a variety of mixes for the Raas/DDN Circuits, and have produced mashups that blend the best of Bollywood with Hip-Hop, R&B, House, Afro, etc.";
 
 export const AFTER_PARTIES = [
   "Raas All-Stars — Baltimore, MD",
@@ -36,6 +43,18 @@ export const AFTER_PARTIES = [
   "Raas Chaos — Washington, DC",
   "ATL Tamasha — Atlanta, GA",
   "Aaja Nachle — Dallas, TX",
+] as const;
+
+export const SET_TYPES = [
+  { label: "Weddings", bold: true },
+  { label: "Afterparties", bold: true },
+  { label: "Clubs", bold: true },
+  { label: "Corporate/Brand Events", bold: true },
+  { label: "Open Format", bold: true },
+  { label: "House", bold: false },
+  { label: "Hip-hop", bold: false },
+  { label: "Desi", bold: false },
+  { label: "R&B", bold: false },
 ] as const;
 
 export const OTHER_LOCATIONS = [

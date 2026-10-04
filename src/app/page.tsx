@@ -16,6 +16,7 @@ import {
   MIXES_INTRO,
   OTHER_LOCATIONS,
   PROFILE_PHOTO,
+  SET_TYPES,
   SITE,
 } from "@/lib/data";
 
@@ -141,22 +142,21 @@ export default function Home() {
                   alt={PROFILE_PHOTO.alt}
                   fill
                   priority
-                  className="object-cover object-[center_40%]"
+                  className="scale-[1.3] object-cover object-[center_40%]"
                   sizes="(max-width: 1024px) 42vw, 28rem"
                 />
               </div>
             </div>
-            <p className="absolute bottom-3 left-1/2 w-[calc(100%-0.75rem)] -translate-x-1/2 truncate rounded-full border border-white/15 bg-black/80 px-2 py-1 text-center text-[8px] uppercase tracking-[0.12em] text-zinc-200 sm:bottom-7 sm:w-max sm:max-w-[88%] sm:px-4 sm:py-2 sm:text-[10px] sm:tracking-[0.18em] lg:text-xs">
-              DJ ROMIR · Desi · Hip-Hop
-            </p>
           </div>
         </div>
         </div>
       </section>
 
+      <LocationBelt items={SET_TYPES} reverse label="Set types" />
+
       <section
         id="live"
-        className="relative scroll-mt-28 overflow-hidden border-t border-white/10 pt-16 pb-0 sm:pt-24 [margin-inline:calc(50%-50vw)] w-screen"
+        className="relative scroll-mt-28 overflow-hidden pt-16 pb-0 sm:pt-24 [margin-inline:calc(50%-50vw)] w-screen"
       >
         <div className="relative mx-auto max-w-6xl px-6">
         <div className="relative z-0">
@@ -174,9 +174,11 @@ export default function Home() {
           title="Previous Events"
           variant="events"
         />
-        <p className="mb-10 max-w-2xl text-base leading-relaxed text-zinc-400">
-          {LIVE_DJING_INTRO}
-        </p>
+        <div className="mb-10 max-w-2xl space-y-4 text-base leading-relaxed text-zinc-400">
+          {LIVE_DJING_INTRO.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
+        </div>
 
         <CardRow label="gigs">
           {AFTER_PARTIES.map((event) => {
@@ -359,13 +361,31 @@ export default function Home() {
 
       <section
         id="book"
-        className="scroll-mt-28 border-t border-white/10 py-16 sm:py-24"
+        className="relative scroll-mt-28 overflow-hidden border-t border-white/10 py-16 sm:py-24 [margin-inline:calc(50%-50vw)] w-screen"
       >
-        <SectionIndex index="04" label="Bookings" title="Inquiries." />
-        <p className="mb-10 max-w-2xl text-base leading-relaxed text-zinc-400">
-          Reach out for bookings, mix inquiries, and collaborations.
-        </p>
-        <InquiryForm />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(50% 55% at 50% 42%, rgba(0, 102, 255, 0.2), transparent 70%), radial-gradient(28% 36% at 50% 58%, rgba(255, 255, 255, 0.05), transparent 70%)",
+          }}
+        />
+        <div className="relative mx-auto max-w-6xl px-6">
+          <SectionIndex index="04" label="Bookings" title="Inquiries." />
+          <p className="mb-10 max-w-2xl text-base leading-relaxed text-zinc-400">
+            Reach out for bookings, mix inquiries, and collaborations.
+          </p>
+          <div
+            className="relative rounded-[32px] border border-white/15 p-[clamp(16px,2.4vw,32px)] shadow-[inset_0_1px_0_rgba(255,255,255,0.2),inset_0_-1px_0_rgba(0,0,0,0.3),0_30px_80px_rgba(0,0,0,0.55)] backdrop-blur-[24px] backdrop-saturate-[1.7]"
+            style={{
+              background:
+                "linear-gradient(160deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.02) 45%, rgba(255, 255, 255, 0.06))",
+            }}
+          >
+            <InquiryForm />
+          </div>
+        </div>
       </section>
     </div>
   );

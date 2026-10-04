@@ -250,6 +250,18 @@ body {
   animation: location-marquee 38s linear infinite;
 }
 
+.location-belt--reverse {
+  padding: 14px 0;
+}
+
+.location-belt--reverse .location-belt__track {
+  animation-direction: reverse;
+}
+
+.location-belt--reverse .location-belt__name {
+  color: #ffffff;
+}
+
 .location-belt:hover .location-belt__track {
   animation-play-state: paused;
 }
@@ -266,8 +278,13 @@ body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14.5px;
   font-style: italic;
+  font-weight: 400;
   line-height: 23.2px;
   color: rgb(185, 183, 178);
+}
+
+.location-belt__name--bold {
+  font-weight: 700;
 }
 
 .location-belt__dot {

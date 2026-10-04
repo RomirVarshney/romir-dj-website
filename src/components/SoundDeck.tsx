@@ -469,12 +469,14 @@ function DarkPlayer({ mix }: { mix: SoundPlayer }) {
         <ol className="h-[184px] overflow-y-auto border-t border-white/10 [scrollbar-color:#3a3a3a_transparent]">
           {sounds.map((sound, index) => {
             const current = playing && trackIndex === index;
+            const playsText = formatPlays(sound.playback_count ?? NaN);
+            const timeText = formatTime(sound.duration);
             return (
               <li key={`${sound.title}-${index}`}>
                 <button
                   type="button"
                   onClick={() => playTrack(index)}
-                  className="grid w-full grid-cols-[1.75rem_1fr_auto_auto] items-center gap-3 px-4 py-2 text-left hover:bg-white/[0.04]"
+                  className="grid w-full grid-cols-[1.75rem_1fr_auto_auto_auto] items-center gap-3 px-4 py-2 text-left hover:bg-white/[0.04]"
                 >
                   <span className={`text-sm ${current ? "text-[#0066ff]" : "text-[#b3b3b3]"}`}>
                     {index + 1}
@@ -495,9 +497,14 @@ function DarkPlayer({ mix }: { mix: SoundPlayer }) {
                         : undefined
                     }
                   >
-                    {formatPlays(sound.playback_count ?? NaN)}
+                    {playsText}
                   </span>
-                  <span className="text-xs tabular-nums text-[#b3b3b3]">{formatTime(sound.duration)}</span>
+                  {playsText && timeText ? (
+                    <span aria-hidden className="h-1.5 w-1.5 bg-[#0066ff]" />
+                  ) : (
+                    <span aria-hidden />
+                  )}
+                  <span className="text-xs tabular-nums text-[#b3b3b3]">{timeText}</span>
                 </button>
               </li>
             );

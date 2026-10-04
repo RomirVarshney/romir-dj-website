@@ -1,21 +1,49 @@
 "use client";
 
+import { Nunito_Sans } from "next/font/google";
 import { useState } from "react";
-import { BIO, LIVE_DJING_INTRO } from "@/lib/data";
+import { BIO } from "@/lib/data";
+
+const bioFallback = Nunito_Sans({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-bio",
+});
+
+const bioFont = '"Avenir Next", Avenir, var(--font-bio), sans-serif';
+const GT_PHRASE = "GT Ramblin' Raas '24-'26";
+const TECH_GOLD = "#B39051";
+
+function colorGtPhrase(text: string) {
+  const index = text.indexOf(GT_PHRASE);
+  if (index === -1) return text;
+  return (
+    <>
+      {text.slice(0, index)}
+      <span style={{ color: TECH_GOLD }}>{GT_PHRASE}</span>
+      {text.slice(index + GT_PHRASE.length)}
+    </>
+  );
+}
 
 export default function BioCopy() {
   const [open, setOpen] = useState(false);
+  const [lead, ...rest] = BIO;
+  const paragraphClass =
+    "indent-[1.5em] text-[15px] leading-[1.6] text-zinc-200 sm:text-[17px] sm:leading-[1.65]";
 
   return (
-    <div>
-      <p className="text-[15px] leading-[1.6] text-zinc-300 sm:text-[17px] sm:leading-[1.65]">
-        {BIO}
+    <div className={bioFallback.variable}>
+      <p className={paragraphClass} style={{ fontFamily: bioFont }}>
+        {colorGtPhrase(lead)}
       </p>
-      {open ? (
-        <p className="mt-4 text-[15px] leading-[1.6] text-zinc-300 sm:text-[17px] sm:leading-[1.65]">
-          {LIVE_DJING_INTRO}
-        </p>
-      ) : null}
+      {open
+        ? rest.map((paragraph) => (
+            <p key={paragraph} className={`mt-4 ${paragraphClass}`} style={{ fontFamily: bioFont }}>
+              {colorGtPhrase(paragraph)}
+            </p>
+          ))
+        : null}
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}

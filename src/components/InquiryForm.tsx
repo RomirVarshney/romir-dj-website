@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { SITE } from "@/lib/data";
 
+const fieldClass =
+  "mt-2 w-full rounded-[14px] border border-white/[0.16] bg-white/[0.07] px-4 py-3 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] outline-none transition-colors placeholder:text-zinc-600 focus:border-[#0066ff]";
+
 const EVENT_TYPES = [
   "Afterparty",
   "Mixer",
@@ -126,7 +129,7 @@ export default function InquiryForm() {
           autoComplete="name"
           placeholder="Your name"
           onChange={() => setError("")}
-          className="mt-2 w-full rounded-xl border border-white/15 bg-transparent px-4 py-3 text-white outline-none transition-colors placeholder:text-zinc-600 focus:border-[#0066ff]"
+          className={fieldClass}
         />
       </label>
       <label className="block text-sm text-zinc-300">
@@ -138,7 +141,7 @@ export default function InquiryForm() {
           autoComplete="email"
           placeholder="you@email.com"
           onChange={() => setError("")}
-          className="mt-2 w-full rounded-xl border border-white/15 bg-transparent px-4 py-3 text-white outline-none transition-colors placeholder:text-zinc-600 focus:border-[#0066ff]"
+          className={fieldClass}
         />
       </label>
       <label className="block text-sm text-zinc-300">
@@ -146,7 +149,7 @@ export default function InquiryForm() {
         <input
           name="date"
           type="date"
-          className="mt-2 w-full rounded-xl border border-white/15 bg-transparent px-4 py-3 text-white outline-none transition-colors focus:border-[#0066ff]"
+          className={fieldClass}
         />
       </label>
       <label className="block text-sm text-zinc-300">
@@ -154,7 +157,7 @@ export default function InquiryForm() {
         <input
           name="city"
           placeholder="City, venue"
-          className="mt-2 w-full rounded-xl border border-white/15 bg-transparent px-4 py-3 text-white outline-none transition-colors placeholder:text-zinc-600 focus:border-[#0066ff]"
+          className={fieldClass}
         />
       </label>
       <label className="block text-sm text-zinc-300">
@@ -162,7 +165,7 @@ export default function InquiryForm() {
         <select
           name="type"
           defaultValue="Afterparty"
-          className="mt-2 w-full rounded-xl border border-white/15 bg-[#0a0a0a] px-4 py-3 text-white outline-none transition-colors focus:border-[#0066ff]"
+          className={fieldClass}
         >
           {EVENT_TYPES.map((type) => (
             <option key={type} value={type}>
@@ -179,7 +182,7 @@ export default function InquiryForm() {
           rows={5}
           placeholder="Tell me about the event"
           onChange={() => setError("")}
-          className="mt-2 w-full resize-y rounded-xl border border-white/15 bg-transparent px-4 py-3 text-white outline-none transition-colors placeholder:text-zinc-600 focus:border-[#0066ff]"
+          className={`${fieldClass} resize-y`}
         />
       </label>
       {error ? (
