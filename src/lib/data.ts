@@ -6,6 +6,7 @@ export const SITE = {
   phone: "904-955-6810",
   phoneHref: "tel:+19049556810",
   smsHref: "sms:+19049556810",
+  email: "romir.varshney@gmail.com",
 } as const;
 
 export const PROFILE_PHOTO = {

@@ -5,35 +5,104 @@ import { SITE } from "@/lib/data";
 
 const EVENT_TYPES = [
   "Afterparty",
-  "Competition",
-  "Private event",
+  "Mixer",
+  "Afterparty/Mixer",
+  "Wedding",
+  "Private Event",
   "Other",
 ] as const;
 
 export default function InquiryForm() {
   const [error, setError] = useState("");
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
 
-  function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const name = String(data.get("name") ?? "").trim();
+    const email = String(data.get("email") ?? "").trim();
     const message = String(data.get("message") ?? "").trim();
 
-    if (!name || !message) {
-      setError("Add your name and a short note about the event.");
+    if (!name || !email || !message) {
+      setError("Add your name, email, and a short note about the event.");
+      return;
+    }
+
+    if (String(data.get("_honey") ?? "").trim()) {
+      setSent(true);
       return;
     }
 
     setError("");
-    const lines = [
-      `Booking inquiry from ${name}`,
-      data.get("date") ? `Date: ${data.get("date")}` : "",
-      data.get("city") ? `City / venue: ${data.get("city")}` : "",
-      data.get("type") ? `Event type: ${data.get("type")}` : "",
-      message,
-    ].filter(Boolean);
+    setSending(true);
 
-    window.location.href = `${SITE.smsHref}?body=${encodeURIComponent(lines.join("\n"))}`;
+    try {
+      const response = await fetch(
+        `https://formsubmit.co/ajax/${encodeURIComponent(SITE.email)}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            date: String(data.get("date") ?? ""),
+            city: String(data.get("city") ?? ""),
+            type: String(data.get("type") ?? ""),
+            message,
+            _subject: `Booking inquiry from ${name}`,
+            _replyto: email,
+            _captcha: "false",
+            _template: "table",
+          }),
+        },
+      );
+      const result = (await response.json()) as { success?: string | boolean };
+
+      if (!response.ok || result.success === false || result.success === "false") {
+        setError("Couldn't send that inquiry. Try again in a moment.");
+        return;
+      }
+
+      setSent(true);
+    } catch {
+      setError("Couldn't send that inquiry. Try again in a moment.");
+    } finally {
+      setSending(false);
+    }
+  }
+
+  if (sent) {
+    return (
+      <div>
+        <p className="text-2xl font-semibold text-[#f4f2ee]">Inquiry sent.</p>
+        <p className="mt-3 max-w-xl text-base leading-relaxed text-zinc-400">
+          Thanks, I got it. I&apos;ll get back to you soon.
+        </p>
+        <p className="mt-4 text-sm text-zinc-500">
+          You can also send a text to{" "}
+          <a
+            href={SITE.smsHref}
+            className="text-zinc-300 underline-offset-4 hover:text-white hover:underline"
+          >
+            {SITE.phone}
+          </a>
+          , or message{" "}
+          <a
+            href={SITE.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-zinc-300 underline-offset-4 hover:text-white hover:underline"
+          >
+            {SITE.instagramHandle}
+          </a>{" "}
+          on Instagram!
+        </p>
+      </div>
+    );
   }
 
   return (
@@ -41,6 +110,14 @@ export default function InquiryForm() {
       onSubmit={onSubmit}
       className="grid gap-4 [color-scheme:dark] sm:grid-cols-2"
     >
+      <input
+        type="text"
+        name="_honey"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden
+        className="hidden"
+      />
       <label className="block text-sm text-zinc-300">
         Name
         <input
@@ -48,6 +125,18 @@ export default function InquiryForm() {
           required
           autoComplete="name"
           placeholder="Your name"
+          onChange={() => setError("")}
+          className="mt-2 w-full rounded-xl border border-white/15 bg-transparent px-4 py-3 text-white outline-none transition-colors placeholder:text-zinc-600 focus:border-[#0066ff]"
+        />
+      </label>
+      <label className="block text-sm text-zinc-300">
+        Email
+        <input
+          name="email"
+          type="email"
+          required
+          autoComplete="email"
+          placeholder="you@email.com"
           onChange={() => setError("")}
           className="mt-2 w-full rounded-xl border border-white/15 bg-transparent px-4 py-3 text-white outline-none transition-colors placeholder:text-zinc-600 focus:border-[#0066ff]"
         />
@@ -99,21 +188,29 @@ export default function InquiryForm() {
       <div className="sm:col-span-2">
         <button
           type="submit"
-          className="rounded-full bg-[#0066ff] px-6 py-3 text-sm font-semibold uppercase tracking-widest text-white transition-colors hover:bg-[#3385ff]"
+          disabled={sending}
+          className="rounded-full bg-[#0066ff] px-6 py-3 text-sm font-semibold uppercase tracking-widest text-white transition-colors hover:bg-[#3385ff] disabled:opacity-60"
         >
-          Send inquiry
+          {sending ? "Sending..." : "Send inquiry"}
         </button>
         <p className="mt-4 text-sm text-zinc-500">
-          Sends a text to {SITE.phone}, or{" "}
+          You can also send a text to{" "}
+          <a
+            href={SITE.smsHref}
+            className="text-zinc-300 underline-offset-4 hover:text-white hover:underline"
+          >
+            {SITE.phone}
+          </a>
+          , or message{" "}
           <a
             href={SITE.instagram}
             target="_blank"
             rel="noopener noreferrer"
             className="text-zinc-300 underline-offset-4 hover:text-white hover:underline"
           >
-            message {SITE.instagramHandle} on Instagram
-          </a>
-          .
+            {SITE.instagramHandle}
+          </a>{" "}
+          on Instagram!
         </p>
       </div>
     </form>
