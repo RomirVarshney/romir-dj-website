@@ -18,11 +18,11 @@ const spaceMono = Space_Mono({
 export const metadata: Metadata = {
   title: "DJ ROMIR",
   description:
-    "DJ and producer specializing in Desi, Hip-Hop, Pop, RnB, and more. Raas/DDN mixes, mixtapes, and live DJing across the nation.",
+    "DJ and producer specializing in Desi, Hip-Hop, Pop, R&B, and more. Raas/DDN mixes, mixtapes, and live DJing across the nation.",
   openGraph: {
     title: "DJ ROMIR",
     description:
-      "DJ and producer specializing in Desi, Hip-Hop, Pop, RnB, and more.",
+      "DJ and producer specializing in Desi, Hip-Hop, Pop, R&B, and more.",
     type: "website",
   },
 };
