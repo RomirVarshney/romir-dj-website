@@ -67,6 +67,30 @@ const FADE_OUT_SECONDS = 0.2;
 
 let fadeOutPreview: (() => void) | null = null;
 
+const IFRAME_CONCURRENCY = 2;
+const iframeQueue: Array<() => void> = [];
+let iframeActive = 0;
+
+function drainIframeQueue() {
+  while (iframeActive < IFRAME_CONCURRENCY && iframeQueue.length > 0) {
+    const run = iframeQueue.shift();
+    if (!run) return;
+    iframeActive += 1;
+    run();
+  }
+}
+
+function enqueueIframe(run: () => void, priority = false) {
+  if (priority) iframeQueue.unshift(run);
+  else iframeQueue.push(run);
+  drainIframeQueue();
+}
+
+function releaseIframeSlot() {
+  iframeActive = Math.max(0, iframeActive - 1);
+  drainIframeQueue();
+}
+
 let apiPromise: Promise<void> | null = null;
 
 function loadSoundCloudApi() {
@@ -204,8 +228,27 @@ function DarkPlayer({ mix }: { mix: SoundPlayer }) {
     let laterTimer = 0;
     let started = false;
 
-    const start = () => {
-      if (started || cancelled) return;
+    let holdsSlot = false;
+    const release = () => {
+      if (!holdsSlot) return;
+      holdsSlot = false;
+      releaseIframeSlot();
+    };
+
+    const launch = (fromQueue: boolean) => {
+      if (fromQueue) holdsSlot = true;
+      const safety = fromQueue ? window.setTimeout(release, 8000) : 0;
+      const finish = () => {
+        if (!fromQueue) return;
+        fromQueue = false;
+        if (safety) window.clearTimeout(safety);
+        release();
+      };
+
+      if (cancelled || started) {
+        finish();
+        return;
+      }
       started = true;
       if (iframeRef.current && !iframeRef.current.getAttribute("src")) {
         iframeRef.current.src = soundCloudPlayerSrc(mix.url);
@@ -213,10 +256,14 @@ function DarkPlayer({ mix }: { mix: SoundPlayer }) {
 
       loadSoundCloudApi()
         .then(() => {
-          if (cancelled || !window.SC || !iframeRef.current) return;
+          if (cancelled || !window.SC || !iframeRef.current) {
+            finish();
+            return;
+          }
           const widget = window.SC.Widget(iframeRef.current);
           widgetRef.current = widget;
           widget.bind("ready", () => {
+            finish();
             readyRef.current = true;
             widgets.set(mix.url, widget);
 
@@ -284,6 +331,7 @@ function DarkPlayer({ mix }: { mix: SoundPlayer }) {
           });
         })
         .catch(() => {
+          finish();
           readyRef.current = false;
           if (wantsPlayRef.current) {
             wantsPlayRef.current = false;
@@ -292,18 +340,21 @@ function DarkPlayer({ mix }: { mix: SoundPlayer }) {
         });
     };
 
-    startRef.current = start;
+    startRef.current = () => launch(false);
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry?.isIntersecting) start();
+        if (!entry?.isIntersecting || started) return;
+        observer.disconnect();
+        enqueueIframe(() => launch(true), tall);
       },
-      { rootMargin: "800px 0px", threshold: 0 },
+      { rootMargin: "200px 0px", threshold: 0 },
     );
     observer.observe(article);
 
     return () => {
       cancelled = true;
+      release();
       startRef.current = null;
       wantsPlayRef.current = false;
       observer.disconnect();
@@ -540,7 +591,6 @@ function MashupPreview() {
   const stopRef = useRef<() => void>(() => {});
   const [hoverCapable, setHoverCapable] = useState(false);
   const [playing, setPlaying] = useState(false);
-  const [progress, setProgress] = useState(0);
 
   function ensureGraph() {
     const audio = audioRef.current;
@@ -608,31 +658,19 @@ function MashupPreview() {
     if (!article || !audio) return;
 
     const warm = () => {
-      if (audio.getAttribute("src")) return;
-      audio.preload = "auto";
-      audio.src = MASHUP_SRC;
-      audio.load();
+      if (audio.getAttribute("src") || audio.dataset.warmed === "1") return;
+      audio.dataset.warmed = "1";
+      void fetch(MASHUP_SRC, { headers: { Range: "bytes=0-599999" } }).catch(() => {});
     };
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry?.isIntersecting) warm();
       },
-      { rootMargin: "800px 0px", threshold: 0 },
+      { rootMargin: "200px 0px", threshold: 0 },
     );
     observer.observe(article);
     return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    const onTime = () => {
-      if (!audio.duration) return;
-      setProgress(audio.currentTime / audio.duration);
-    };
-    audio.addEventListener("timeupdate", onTime);
-    return () => audio.removeEventListener("timeupdate", onTime);
   }, []);
 
   async function start() {
@@ -700,25 +738,25 @@ function MashupPreview() {
                 else void start();
               }
         }
-        className={`relative overflow-hidden rounded-2xl border bg-[#101010] transition duration-300 hover:-translate-y-[3px] hover:border-white/25 ${
-          playing ? "border-[#0066ff]/70" : "border-white/15"
+        className={`relative overflow-hidden rounded-2xl border-2 bg-[#101010] transition duration-300 hover:-translate-y-[3px] ${
+          playing ? "border-[#d4bc7a]" : "border-[#B39051]"
         }`}
       >
       <audio ref={audioRef} preload="none" loop className="hidden" />
-      <div className="flex items-center gap-4 px-5 py-5 sm:gap-6">
+      <div className="flex h-[152px] items-center gap-4 px-4">
         <Image
           src="/images/covers/pyaar-hota-x-down-with-me.jpg"
           alt=""
-          width={220}
-          height={220}
-          className="size-28 shrink-0 rounded-xl object-cover sm:size-44"
+          width={120}
+          height={120}
+          className="size-[72px] shrink-0 rounded-[4px] object-cover min-[720px]:size-[112px]"
         />
         <div className="min-w-0">
-          <h3 className="text-lg font-bold leading-tight text-white sm:text-2xl">
+          <h3 className="text-[15px] font-bold leading-tight text-white">
             PYAAR HOTA KAYI BAAR HAI x DOWN WITH ME
           </h3>
-          <p className="mt-2 text-sm text-[#b3b3b3]">ROMIR</p>
-          <p className="mt-3 text-sm text-[#b3b3b3]">
+          <p className="mt-1.5 text-[13px] text-[#b3b3b3]">ROMIR</p>
+          <p className="mt-1.5 text-[13px] text-[#b3b3b3]">
             <span className="[@media(hover:hover)_and_(pointer:fine)]:hidden">
               Tap to preview
             </span>
@@ -727,12 +765,6 @@ function MashupPreview() {
             </span>
           </p>
         </div>
-      </div>
-      <div className="absolute inset-x-0 bottom-0 h-[3px] bg-white/10">
-        <div
-          className="h-full bg-[#0066ff]"
-          style={{ width: `${Math.min(100, Math.max(0, progress * 100))}%` }}
-        />
       </div>
       </article>
     </div>

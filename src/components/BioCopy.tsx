@@ -9,6 +9,7 @@ const bioFallback = Nunito_Sans({
   weight: "400",
   style: ["normal", "italic"],
   variable: "--font-bio",
+  preload: false,
 });
 
 const bioFont = '"Avenir Next", Avenir, var(--font-bio), sans-serif';

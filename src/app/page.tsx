@@ -37,7 +37,7 @@ const GIG_VIDEOS: Record<string, string> = {
   "Raas All-Stars — Baltimore, MD": "/videos/raas-all-stars-video.mp4",
   "ATL Tamasha — Atlanta, GA": "/videos/atl-holi-show-video.mp4",
   "Aaja Nachle — Dallas, TX": "/videos/ft-laudy-vid.mp4",
-  "Vice City Showdown — Miami, FL": "/videos/vice-city-showdown-video.mp4?v=3",
+  "Vice City Showdown — Miami, FL": "/videos/vice-city-showdown-video.mp4?v=4",
 };
 
 function SectionIndex({
