@@ -7,6 +7,7 @@ import { BIO } from "@/lib/data";
 const bioFallback = Nunito_Sans({
   subsets: ["latin"],
   weight: "400",
+  style: ["normal", "italic"],
   variable: "--font-bio",
 });
 
@@ -37,13 +38,21 @@ export default function BioCopy() {
       <p className={paragraphClass} style={{ fontFamily: bioFont }}>
         {colorGtPhrase(lead)}
       </p>
-      {open
-        ? rest.map((paragraph) => (
+      {open ? (
+        <>
+          {rest.map((paragraph) => (
             <p key={paragraph} className={`mt-4 ${paragraphClass}`} style={{ fontFamily: bioFont }}>
               {colorGtPhrase(paragraph)}
             </p>
-          ))
-        : null}
+          ))}
+          <p
+            className="mt-4 text-right text-[15px] italic leading-[1.6] text-zinc-200 sm:mt-[18px] sm:text-[17px]"
+            style={{ fontFamily: bioFont }}
+          >
+            — DJ ROMIR
+          </p>
+        </>
+      ) : null}
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}

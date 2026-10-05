@@ -11,16 +11,19 @@ import {
 
 type SoundPlayer = Mix & { tall?: boolean; wide?: boolean };
 
-const SOUND_PLAYERS: SoundPlayer[] = [
-  { ...RAAS_MIXES[0], wide: true },
-  RAAS_MIXES[1],
-  RAAS_MIXES[2],
+const RELEASED_MASHUPS: SoundPlayer[] = [
   { ...MIXTAPE_SEGMENTS[2], tall: true, wide: true },
+  MIXTAPE_SEGMENTS[0],
+  MIXTAPE_SEGMENTS[1],
+];
+
+const MIXES: SoundPlayer[] = [
+  { ...RAAS_MIXES[0], wide: true },
+  { ...RAAS_MIXES[1], wide: true },
+  RAAS_MIXES[2],
   RAAS_MIXES[3],
   RAAS_MIXES[4],
   RAAS_MIXES[5],
-  MIXTAPE_SEGMENTS[0],
-  { ...MIXTAPE_SEGMENTS[1], wide: true },
 ];
 
 type ScSound = {
@@ -56,6 +59,13 @@ declare global {
 }
 
 const widgets = new Map<string, ScWidget>();
+const MASHUP_ID = "mashup-preview";
+const MASHUP_SRC = "/audio/pyaar-hota-x-down-with-me.mp3";
+const MASHUP_START = 22;
+const FADE_IN_SECONDS = 0.55;
+const FADE_OUT_SECONDS = 0.2;
+
+let fadeOutPreview: (() => void) | null = null;
 
 let apiPromise: Promise<void> | null = null;
 
@@ -120,6 +130,7 @@ function pauseOthers(id: string) {
   widgets.forEach((widget, key) => {
     if (key !== id) widget.pause();
   });
+  if (id !== MASHUP_ID) fadeOutPreview?.();
 }
 
 function PlayIcon() {
@@ -521,12 +532,246 @@ function DarkPlayer({ mix }: { mix: SoundPlayer }) {
   );
 }
 
-export default function SoundDeck() {
+function MashupPreview() {
+  const articleRef = useRef<HTMLElement>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const graphRef = useRef<{ context: AudioContext; gain: GainNode } | null>(null);
+  const tokenRef = useRef(0);
+  const stopRef = useRef<() => void>(() => {});
+  const [hoverCapable, setHoverCapable] = useState(false);
+  const [playing, setPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  function ensureGraph() {
+    const audio = audioRef.current;
+    if (!audio || graphRef.current) return graphRef.current;
+    const context = new AudioContext();
+    const gain = context.createGain();
+    gain.gain.value = 0;
+    const source = context.createMediaElementSource(audio);
+    source.connect(gain);
+    gain.connect(context.destination);
+    graphRef.current = { context, gain };
+    return graphRef.current;
+  }
+
+  function rampGain(value: number, seconds: number) {
+    const graph = graphRef.current;
+    if (!graph) return;
+    const now = graph.context.currentTime;
+    const gain = graph.gain.gain;
+    gain.cancelScheduledValues(now);
+    gain.setValueAtTime(gain.value, now);
+    gain.linearRampToValueAtTime(value, now + seconds);
+  }
+
+  function stop() {
+    const audio = audioRef.current;
+    tokenRef.current += 1;
+    const token = tokenRef.current;
+    if (!audio || !graphRef.current) {
+      setPlaying(false);
+      return;
+    }
+    rampGain(0, FADE_OUT_SECONDS);
+    window.setTimeout(() => {
+      if (tokenRef.current !== token) return;
+      audio.pause();
+      setPlaying(false);
+    }, FADE_OUT_SECONDS * 1000 + 40);
+  }
+
+  stopRef.current = stop;
+
+  useEffect(() => {
+    fadeOutPreview = () => stopRef.current();
+    return () => {
+      fadeOutPreview = null;
+      const audio = audioRef.current;
+      if (audio) audio.pause();
+      void graphRef.current?.context.close();
+      graphRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    const media = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const apply = () => setHoverCapable(media.matches);
+    apply();
+    media.addEventListener("change", apply);
+    return () => media.removeEventListener("change", apply);
+  }, []);
+
+  useEffect(() => {
+    const article = articleRef.current;
+    const audio = audioRef.current;
+    if (!article || !audio) return;
+
+    const warm = () => {
+      if (audio.getAttribute("src")) return;
+      audio.preload = "auto";
+      audio.src = MASHUP_SRC;
+      audio.load();
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) warm();
+      },
+      { rootMargin: "800px 0px", threshold: 0 },
+    );
+    observer.observe(article);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    const onTime = () => {
+      if (!audio.duration) return;
+      setProgress(audio.currentTime / audio.duration);
+    };
+    audio.addEventListener("timeupdate", onTime);
+    return () => audio.removeEventListener("timeupdate", onTime);
+  }, []);
+
+  async function start() {
+    const audio = audioRef.current;
+    if (!audio) return;
+    const token = ++tokenRef.current;
+    if (!audio.getAttribute("src")) {
+      audio.preload = "auto";
+      audio.src = MASHUP_SRC;
+    }
+    const graph = ensureGraph();
+    if (!graph) return;
+    pauseOthers(MASHUP_ID);
+    try {
+      await graph.context.resume();
+    } catch {
+      return;
+    }
+    if (token !== tokenRef.current) return;
+    if (audio.readyState < HTMLMediaElement.HAVE_METADATA) {
+      await new Promise<void>((resolve) => {
+        audio.addEventListener("loadedmetadata", () => resolve(), { once: true });
+      });
+    }
+    if (token !== tokenRef.current) return;
+    audio.loop = true;
+    audio.currentTime = MASHUP_START;
+    if (Math.abs(audio.currentTime - MASHUP_START) > 0.35) {
+      await new Promise<void>((resolve) => {
+        audio.addEventListener("seeked", () => resolve(), { once: true });
+      });
+    }
+    if (token !== tokenRef.current) return;
+    graph.gain.gain.cancelScheduledValues(graph.context.currentTime);
+    graph.gain.gain.setValueAtTime(0, graph.context.currentTime);
+    graph.gain.gain.linearRampToValueAtTime(
+      1,
+      graph.context.currentTime + FADE_IN_SECONDS,
+    );
+    try {
+      await audio.play();
+    } catch {
+      return;
+    }
+    if (token !== tokenRef.current) {
+      audio.pause();
+      return;
+    }
+    setPlaying(true);
+  }
+
+  return (
+    <div>
+      <GroupLabel>Upcoming Mashup</GroupLabel>
+      <article
+        ref={articleRef}
+        onPointerEnter={hoverCapable ? () => void start() : undefined}
+        onPointerLeave={hoverCapable ? stop : undefined}
+        onClick={
+          hoverCapable
+            ? undefined
+            : () => {
+                const audio = audioRef.current;
+                if (audio && !audio.paused) stop();
+                else void start();
+              }
+        }
+        className={`relative overflow-hidden rounded-2xl border bg-[#101010] transition duration-300 hover:-translate-y-[3px] hover:border-white/25 ${
+          playing ? "border-[#0066ff]/70" : "border-white/15"
+        }`}
+      >
+      <audio ref={audioRef} preload="none" loop className="hidden" />
+      <div className="flex items-center gap-4 px-5 py-5 sm:gap-6">
+        <Image
+          src="/images/covers/pyaar-hota-x-down-with-me.jpg"
+          alt=""
+          width={220}
+          height={220}
+          className="size-28 shrink-0 rounded-xl object-cover sm:size-44"
+        />
+        <div className="min-w-0">
+          <h3 className="text-lg font-bold leading-tight text-white sm:text-2xl">
+            PYAAR HOTA KAYI BAAR HAI x DOWN WITH ME
+          </h3>
+          <p className="mt-2 text-sm text-[#b3b3b3]">ROMIR</p>
+          <p className="mt-3 text-sm text-[#b3b3b3]">
+            <span className="[@media(hover:hover)_and_(pointer:fine)]:hidden">
+              Tap to preview
+            </span>
+            <span className="hidden [@media(hover:hover)_and_(pointer:fine)]:inline">
+              Hover to preview
+            </span>
+          </p>
+        </div>
+      </div>
+      <div className="absolute inset-x-0 bottom-0 h-[3px] bg-white/10">
+        <div
+          className="h-full bg-[#0066ff]"
+          style={{ width: `${Math.min(100, Math.max(0, progress * 100))}%` }}
+        />
+      </div>
+      </article>
+    </div>
+  );
+}
+
+function GroupLabel({ children }: { children: string }) {
+  return (
+    <p
+      className="mb-3 text-[13px] font-extrabold uppercase leading-none tracking-[-0.025em] text-[#f4f2ee]"
+      style={{ fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif' }}
+    >
+      {children}
+    </p>
+  );
+}
+
+function PlayerGrid({ players }: { players: SoundPlayer[] }) {
   return (
     <div className="grid grid-cols-1 gap-3 min-[720px]:grid-cols-2">
-      {SOUND_PLAYERS.map((mix) => (
+      {players.map((mix) => (
         <DarkPlayer key={mix.url} mix={mix} />
       ))}
+    </div>
+  );
+}
+
+export default function SoundDeck() {
+  return (
+    <div className="flex flex-col gap-10">
+      <MashupPreview />
+      <div>
+        <GroupLabel>Released Mashups</GroupLabel>
+        <PlayerGrid players={RELEASED_MASHUPS} />
+      </div>
+      <div>
+        <GroupLabel>Mixes</GroupLabel>
+        <PlayerGrid players={MIXES} />
+      </div>
     </div>
   );
 }
