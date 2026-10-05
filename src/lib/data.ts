@@ -86,12 +86,12 @@ export type Mix = {
 
 export const RAAS_MIXES: Mix[] = [
   {
-    title: "GT Ramblin' Raas - RAS XVIII 2026",
+    title: "GT Ramblin' Raas - RAS XVIII 2026 🥈",
     cover: "/images/covers/ras-xviii-2026.jpg",
     url: "https://soundcloud.com/romirvarshney/gt-ramblin-raas-ras-xviii-2026",
   },
   {
-    title: "GT Ramblin' Raas - RAS XVII 2025",
+    title: "GT Ramblin' Raas - RAS XVII 2025 🏆",
     cover: "/images/covers/ras-xvii-2025.jpg",
     url: "https://soundcloud.com/romirvarshney/gt-final-ras-mix-1",
   },
